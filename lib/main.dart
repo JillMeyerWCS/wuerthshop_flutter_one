@@ -100,6 +100,7 @@ class _DairySearchFormState extends State<DairySearchForm> {
       });
       return value;
     });
+    _inputController.addListener(_updateResults);
   }
 
   @override
@@ -130,6 +131,17 @@ class _DairySearchFormState extends State<DairySearchForm> {
             ],
           );
         });
+  }
+
+  void _updateResults() {
+    setState(() {
+      _searchResult = _dairyFactories
+          .where((element) =>
+              element.approvalNumber.contains(_inputController.text))
+          .take(10)
+          .toList()
+        ..sort();
+    });
   }
 }
 
