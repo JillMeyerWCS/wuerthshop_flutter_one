@@ -2,8 +2,8 @@
 
 Welcome to the flutter würthshop part one.
 
-## Step 2
+## Step 3
 
-Now that we have a base item displayed, let's add the diary identification badge as well.
+Let's replace the middle column of the badge with an actual text field.
 
 ![](./Result.png)

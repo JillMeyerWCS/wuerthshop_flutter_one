@@ -26,18 +26,55 @@ class DairyApprovalNumbersPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Dairy approval number app")),
-      body: Column(
-        children: const [
-        DairyFactoryDisplay(
-          name: "Ehrmann GmbH Oberschönegg im Allgäu",
-          approvalNumber: "BY 77727",
-        ),
-        DairyFactoryDisplay(
-          name: "Allgäu Hof Müller - Milchmanufaktur GmbH & Co.KG",
-          approvalNumber: "BW 08119",
-        ),
-      ]),
+      body: Row(
+        children: [
+          const DairyIdentificationBadge(),
+          Expanded(
+            child: Column(children: const [
+              DairyFactoryDisplay(
+                name: "Ehrmann GmbH Oberschönegg im Allgäu",
+                approvalNumber: "BY 77727",
+              ),
+              DairyFactoryDisplay(
+                name: "Allgäu Hof Müller - Milchmanufaktur GmbH & Co.KG",
+                approvalNumber: "BW 08119",
+              ),
+            ]),
+          ),
+        ],
+      ),
     );
+  }
+}
+
+class DairyIdentificationBadge extends StatelessWidget {
+  const DairyIdentificationBadge({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+        width: 220,
+        child: Center(
+            child: Container(
+          width: 180,
+          height: 120,
+          decoration: BoxDecoration(
+              border: Border.all(),
+              borderRadius: const BorderRadius.all(Radius.elliptical(120, 80))),
+          child: DefaultTextStyle.merge(
+            style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w800,
+              fontFamily: 'Roboto',
+              fontSize: 24,
+            ),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [Text("DE"), Text("BY 12312"), Text("EG")]),
+          ),
+        )));
   }
 }
 
