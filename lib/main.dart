@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:xml/xml.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,16 +40,66 @@ class DairySearchForm extends StatefulWidget {
   State<DairySearchForm> createState() => _DairySearchFormState();
 }
 
+class DairyFactory implements Comparable<DairyFactory> {
+  final String name;
+  final String approvalNumber;
+
+  DairyFactory({required this.name, required this.approvalNumber});
+
+  DairyFactory.parseFromXmlNode(XmlNode node)
+      : name = nameFromXmlNode(node),
+        approvalNumber = approvalNumberFromXmlNode(node);
+
+  static String nameFromXmlNode(XmlNode node) =>
+      node.getElement("bvl:name")?.text ?? 'no name';
+
+  static String approvalNumberFromXmlNode(XmlNode xml) {
+    final newId = xml.getElement("bvl:zulassungsnummer");
+    String? id;
+    if (newId != null && newId.innerText.trim().isNotEmpty) {
+      id =
+          '${newId.getElement("bvl:bundesland")?.text} ${newId.getElement("bvl:nummer")?.text}';
+    } else {
+      id = xml
+          .getElement("bvl:taetigkeit")
+          ?.getElement("bvl:alteZulassungsnummer")
+          ?.innerText;
+    }
+    return id ?? 'unknown';
+  }
+
+  static List<DairyFactory> parseFromXmlDoc(XmlDocument codes) => codes
+      .findAllElements("bvl:betrieb")
+      .map(DairyFactory.parseFromXmlNode)
+      .toList();
+
+  @override
+  int compareTo(DairyFactory other) {
+    // use name for comparison
+    return name.compareTo(other.name);
+  }
+}
+
 class _DairySearchFormState extends State<DairySearchForm> {
   late final Future<String> _fileLoadingPromise;
   final _inputController = TextEditingController();
+  List<DairyFactory> _dairyFactories = <DairyFactory>[];
+  List<DairyFactory> _searchResult = <DairyFactory>[];
 
   @override
   void initState() {
     super.initState();
-    _fileLoadingPromise = Future.delayed(const Duration(seconds: 2)).then(
-        (value) =>
-            DefaultAssetBundle.of(context).loadString("assets/codes.xml"));
+    _fileLoadingPromise = Future.delayed(const Duration(seconds: 2))
+        .then((value) =>
+            DefaultAssetBundle.of(context).loadString("assets/codes.xml"))
+        .then((value) {
+      setState(() {
+        var doc = XmlDocument.parse(value);
+        _dairyFactories = DairyFactory.parseFromXmlDoc(doc);
+        _searchResult = _dairyFactories.take(10).toList();
+      });
+      return value;
+    });
   }
 
   @override
@@ -68,16 +119,13 @@ class _DairySearchFormState extends State<DairySearchForm> {
                 controller: _inputController,
               ),
               Expanded(
-                child: Column(children: const [
-                  DairyFactoryDisplay(
-                    name: "Ehrmann GmbH Oberschönegg im Allgäu",
-                    approvalNumber: "BY 77727",
-                  ),
-                  DairyFactoryDisplay(
-                    name: "Allgäu Hof Müller - Milchmanufaktur GmbH & Co.KG",
-                    approvalNumber: "BW 08119",
-                  ),
-                ]),
+                child: Column(
+                    children: _searchResult
+                        .map((e) => DairyFactoryDisplay(
+                              name: e.name,
+                              approvalNumber: e.approvalNumber,
+                            ))
+                        .toList()),
               ),
             ],
           );
