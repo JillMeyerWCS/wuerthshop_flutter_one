@@ -1,16 +1,16 @@
-# wuerthshop_part_1
+# Flutter Würthshop Part one
 
-A new Flutter project.
+Welcome to the flutter würthshop part one.
 
-## Getting Started
+## Step 1
 
-This project is a starting point for a Flutter application.
+To get started, we will display two items from our future result list.
 
-A few resources to get you started if this is your first Flutter project:
+Use the basic layout widgets like `Column` and `Row` to display two result rows with the following data:
+|Name|Approval Number|
+|---|---|
+|Ehrmann GmbH Oberschönegg im Allgäu|BY 77727|
+|Allgäu Hof Müller - Milchmanufaktur GmbH & Co.KG|BW 08119|
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Try to create a view that looks like this:
+![](./Result.png)
