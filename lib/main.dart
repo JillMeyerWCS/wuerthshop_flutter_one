@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,34 +27,61 @@ class DairyApprovalNumbersPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Dairy approval number app")),
-      body: Row(
-        children: [
-          const DairyIdentificationBadge(),
-          Expanded(
-            child: Column(children: const [
-              DairyFactoryDisplay(
-                name: "Ehrmann GmbH Oberschönegg im Allgäu",
-                approvalNumber: "BY 77727",
-              ),
-              DairyFactoryDisplay(
-                name: "Allgäu Hof Müller - Milchmanufaktur GmbH & Co.KG",
-                approvalNumber: "BW 08119",
-              ),
-            ]),
-          ),
-        ],
-      ),
+      body: DairySearchForm(),
+    );
+  }
+}
+
+class DairySearchForm extends StatefulWidget {
+  const DairySearchForm({Key? key}) : super(key: key);
+
+  @override
+  State<DairySearchForm> createState() => _DairySearchFormState();
+}
+
+class _DairySearchFormState extends State<DairySearchForm> {
+  final _inputController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        DairyIdentificationBadge(
+          controller: _inputController,
+        ),
+        Expanded(
+          child: Column(children: const [
+            DairyFactoryDisplay(
+              name: "Ehrmann GmbH Oberschönegg im Allgäu",
+              approvalNumber: "BY 77727",
+            ),
+            DairyFactoryDisplay(
+              name: "Allgäu Hof Müller - Milchmanufaktur GmbH & Co.KG",
+              approvalNumber: "BW 08119",
+            ),
+          ]),
+        ),
+      ],
     );
   }
 }
 
 class DairyIdentificationBadge extends StatelessWidget {
+  final TextEditingController controller;
+
   const DairyIdentificationBadge({
     Key? key,
+    required this.controller,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    const textStyle = TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.w800,
+      fontFamily: 'Roboto',
+      fontSize: 24,
+    );
     return SizedBox(
         width: 220,
         child: Center(
@@ -64,15 +92,21 @@ class DairyIdentificationBadge extends StatelessWidget {
               border: Border.all(),
               borderRadius: const BorderRadius.all(Radius.elliptical(120, 80))),
           child: DefaultTextStyle.merge(
-            style: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w800,
-              fontFamily: 'Roboto',
-              fontSize: 24,
-            ),
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [Text("DE"), Text("BY 12312"), Text("EG")]),
+            style: textStyle,
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              const Text("DE"),
+              TextField(
+                textAlign: TextAlign.center,
+                style: textStyle,
+                controller: controller,
+                decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    isDense: true,
+                    hintText: "App. Nr."),
+              ),
+              const Text("EG")
+            ]),
           ),
         )));
   }
