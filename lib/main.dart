@@ -27,7 +27,7 @@ class DairyApprovalNumbersPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Dairy approval number app")),
-      body: DairySearchForm(),
+      body: const DairySearchForm(),
     );
   }
 }
@@ -40,29 +40,48 @@ class DairySearchForm extends StatefulWidget {
 }
 
 class _DairySearchFormState extends State<DairySearchForm> {
+  late final Future<String> _fileLoadingPromise;
   final _inputController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    _fileLoadingPromise = Future.delayed(const Duration(seconds: 2)).then(
+        (value) =>
+            DefaultAssetBundle.of(context).loadString("assets/codes.xml"));
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        DairyIdentificationBadge(
-          controller: _inputController,
-        ),
-        Expanded(
-          child: Column(children: const [
-            DairyFactoryDisplay(
-              name: "Ehrmann GmbH Oberschönegg im Allgäu",
-              approvalNumber: "BY 77727",
-            ),
-            DairyFactoryDisplay(
-              name: "Allgäu Hof Müller - Milchmanufaktur GmbH & Co.KG",
-              approvalNumber: "BW 08119",
-            ),
-          ]),
-        ),
-      ],
-    );
+    return FutureBuilder(
+        future: _fileLoadingPromise,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Center(child: Text("Something has gone wrong"));
+          }
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return Row(
+            children: [
+              DairyIdentificationBadge(
+                controller: _inputController,
+              ),
+              Expanded(
+                child: Column(children: const [
+                  DairyFactoryDisplay(
+                    name: "Ehrmann GmbH Oberschönegg im Allgäu",
+                    approvalNumber: "BY 77727",
+                  ),
+                  DairyFactoryDisplay(
+                    name: "Allgäu Hof Müller - Milchmanufaktur GmbH & Co.KG",
+                    approvalNumber: "BW 08119",
+                  ),
+                ]),
+              ),
+            ],
+          );
+        });
   }
 }
 

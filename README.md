@@ -2,15 +2,13 @@
 
 Welcome to the flutter würthshop part one.
 
-## Step 4
+## Step 5
 
-Now that we have the base layout ready, let's load some actual data.
-To do this we will have to do the follwing:
+We were able to load the xml as a string, but we can't work with that.
+That's why we need to import an other package: [xml](https://pub.dev/packages/xml).
 
-- download the [list as xml](https://apps2.bvl.bund.de/bltu/app/process/bvl-btl_p_veroeffentlichung?execution=e1s6&osForm=osForm&javax.faces.ViewState=e1s6&osForm%3Abvl_002dbtl_002ep__veroeffentlichung_002eunterliste__part_002edGrid%3A50%3Abvl_002dbtl_002ep__veroeffentlichung_002eunterliste__part_002edGrid_002eexport0=clicked)
-- move to `./assets/codes.xml`
-- declare asset in [pubspec](./pubspec.yaml)
-- load asset in code
-- show status of loading the asset in code
+After we processed the xml and extracted the necessary data, replace the mock data in the result list with the first 10 diaries approved in germany for processing milk.
 
-![](./Result.gif)
+Try adding a `DairyFactory` class to handle the parsed data that implements `Comparable<DairyFactory>`. This is to sort the results later by name of factory.
+
+![](./Result.png)
