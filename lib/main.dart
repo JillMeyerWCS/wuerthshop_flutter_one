@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wuerthshop_part_1/pages/dairy_name_search_page.dart';
+import 'package:wuerthshop_part_1/pages/saved_dairy_page.dart';
 import 'package:wuerthshop_part_1/util/dairy_factory_service.dart';
 import 'package:xml/xml.dart';
 
@@ -17,7 +18,8 @@ class CustomTab {
 
 final tabs = [
   CustomTab(title: "Search by name", body: const DairyNameSearchPage()),
-  CustomTab(title: "Search by number", body: const DairyApprovalNumbersPage())
+  CustomTab(title: "Search by number", body: const DairyApprovalNumbersPage()),
+  CustomTab(title: "Saved", body: const SavedDairyPage())
 ];
 
 class MyApp extends StatelessWidget {
