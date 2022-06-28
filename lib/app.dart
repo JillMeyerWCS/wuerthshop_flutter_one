@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wuerthshop_part_1/widgets/app_wrapper.dart';
 
 import 'model/app_state.dart';
+import 'model/dairy_factory.dart';
 import 'pages/dairy_approval_number_page.dart';
 import 'pages/dairy_name_search_page.dart';
 import 'pages/saved_dairy_page.dart';
@@ -9,23 +10,32 @@ import 'pages/saved_dairy_page.dart';
 class CustomTab {
   CustomTab({required this.title, required this.body});
   final String title;
-  final Widget Function(AppState) body;
+  final Widget Function(
+      AppState, Function(DairyFactory), Function(DairyFactory)) body;
 }
 
 final tabs = [
   CustomTab(
       title: "Search by name",
-      body: (AppState state) => DairyNameSearchPage(
+      body: (AppState state, addFactory, removeFactory) => DairyNameSearchPage(
             allFactories: state.allFactories,
+            savedFactories: state.savedFactories,
+            addFactory: addFactory,
+            removeFactory: removeFactory,
           )),
   CustomTab(
       title: "Search by number",
-      body: (AppState state) =>
-          DairyApprovalNumbersPage(allFactories: state.allFactories)),
+      body: (AppState state, addFactory, removeFactory) =>
+          DairyApprovalNumbersPage(
+            allFactories: state.allFactories,
+            savedFactories: state.savedFactories,
+            addFactory: addFactory,
+            removeFactory: removeFactory,
+          )),
   CustomTab(
       title: "Saved",
-      body: (AppState state) => SavedDairyPage(
-            savedFactories: state.allFactories,
+      body: (AppState state, addFactory, removeFactory) => SavedDairyPage(
+            savedFactories: state.savedFactories.toList()..sort(),
           ))
 ];
 
@@ -51,9 +61,11 @@ class MyApp extends StatelessWidget {
                     TabBar(tabs: tabs.map((e) => Tab(text: e.title)).toList())),
             body: AppWrapper(
                 initialState: initialAppState,
-                builder: (context, state) {
+                builder: (context, state, addFactory, removeFactory) {
                   return TabBarView(
-                      children: tabs.map((e) => e.body(state)).toList());
+                      children: tabs
+                          .map((e) => e.body(state, addFactory, removeFactory))
+                          .toList());
                 }),
           )),
     );

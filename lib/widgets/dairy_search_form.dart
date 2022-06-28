@@ -7,12 +7,18 @@ class DairySearchForm extends StatefulWidget {
   final Widget Function(TextEditingController) builder;
   final bool Function(DairyFactory, String) filter;
   final List<DairyFactory> allFactories;
+  final Set<DairyFactory> savedFactories;
+  final Function(DairyFactory) addFactory;
+  final Function(DairyFactory) removeFactory;
 
   const DairySearchForm(
       {Key? key,
       required this.builder,
       required this.filter,
-      required this.allFactories})
+      required this.allFactories,
+      required this.savedFactories,
+      required this.addFactory,
+      required this.removeFactory})
       : super(key: key);
 
   @override
@@ -42,9 +48,16 @@ class _DairySearchFormState extends State<DairySearchForm> {
         Expanded(
           child: ListView(
               children: _searchResult
-                  .map((e) => DairyFactoryDisplay(
-                        name: e.name,
-                        approvalNumber: e.approvalNumber,
+                  .map((factory) => DairyFactoryDisplay(
+                        name: factory.name,
+                        approvalNumber: factory.approvalNumber,
+                        trailing: widget.savedFactories.contains(factory)
+                            ? IconButton(
+                                onPressed: () => widget.removeFactory(factory),
+                                icon: const Icon(Icons.favorite))
+                            : IconButton(
+                                onPressed: () => widget.addFactory(factory),
+                                icon: const Icon(Icons.favorite_outline)),
                       ))
                   .toList()),
         ),

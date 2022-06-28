@@ -10,6 +10,11 @@ class SavedDairyPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (savedFactories.isEmpty) {
+      return Center(
+          child: Text("You didn't save any factories yet",
+              style: Theme.of(context).textTheme.headline2));
+    }
     return ListView.builder(
       itemCount: savedFactories.length,
       itemBuilder: (context, index) => DairyFactoryDisplay(
