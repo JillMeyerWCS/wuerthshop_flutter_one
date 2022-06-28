@@ -28,6 +28,16 @@ class DairyFactory implements Comparable<DairyFactory> {
     return id ?? 'unknown';
   }
 
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other.approvalNumber == approvalNumber);
+  }
+
+  @override
+  int get hashCode => approvalNumber.hashCode;
+
   static List<DairyFactory> parseFromXmlDoc(XmlDocument codes) => codes
       .findAllElements("bvl:betrieb")
       .map(DairyFactory.parseFromXmlNode)
