@@ -1,5 +1,6 @@
-import 'package:wuerthshop_part_1/model/dairy_factory.dart';
 import 'package:xml/xml.dart';
+
+import '../model/dairy_factory.dart';
 
 class DairyFactoryService {
   static final DairyFactoryService _instance = DairyFactoryService._internal();

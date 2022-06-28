@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:wuerthshop_part_1/util/dairy_factory_service.dart';
-import 'package:wuerthshop_part_1/widgets/dairy_factory_display.dart';
+import '../util/dairy_factory_service.dart';
+import '../widgets/dairy_factory_display.dart';
 
 class SavedDairyPage extends StatelessWidget {
   const SavedDairyPage({Key? key}) : super(key: key);

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wuerthshop_part_1/model/dairy_factory.dart';
 
 class DairyFactoryDisplay extends StatelessWidget {
   const DairyFactoryDisplay({
