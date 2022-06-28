@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:wuerthshop_part_1/model/app_reducers.dart';
-import 'package:redux/redux.dart';
+import 'package:async_redux/async_redux.dart';
 
 import '../model/app_state.dart';
 
@@ -15,7 +13,7 @@ class AppWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreProvider<AppState>(
-        store: Store<AppState>(appReducer, initialState: initialState),
+        store: Store<AppState>(initialState: initialState),
         child: builder(context));
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
+import 'package:async_redux/async_redux.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../model/app_state.dart';
 import '../model/dairy_factory.dart';
