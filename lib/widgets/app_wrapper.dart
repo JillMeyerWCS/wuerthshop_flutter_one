@@ -5,8 +5,8 @@ import '../model/app_state.dart';
 
 class AppWrapper extends StatefulWidget {
   final AppState initialState;
-  final Widget Function(BuildContext, AppState, Function(DairyFactory),
-      Function(DairyFactory)) builder;
+  final Widget Function(
+      BuildContext, Function(DairyFactory), Function(DairyFactory)) builder;
   const AppWrapper(
       {Key? key, required this.initialState, required this.builder})
       : super(key: key);
@@ -38,6 +38,22 @@ class _AppWrapperState extends State<AppWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.builder(context, _state, addFactory, removeFactory);
+    return InheritedAppState(
+        state: _state,
+        child: widget.builder(context, addFactory, removeFactory));
   }
+}
+
+class InheritedAppState extends InheritedWidget {
+  final AppState state;
+  InheritedAppState({Key? key, required Widget child, required this.state})
+      : super(key: key, child: child);
+
+  @override
+  bool updateShouldNotify(covariant InheritedAppState oldWidget) {
+    return true;
+  }
+
+  static InheritedAppState? of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<InheritedAppState>();
 }

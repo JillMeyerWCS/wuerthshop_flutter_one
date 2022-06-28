@@ -10,33 +10,25 @@ import 'pages/saved_dairy_page.dart';
 class CustomTab {
   CustomTab({required this.title, required this.body});
   final String title;
-  final Widget Function(
-      AppState, Function(DairyFactory), Function(DairyFactory)) body;
+  final Widget Function(Function(DairyFactory), Function(DairyFactory)) body;
 }
 
 final tabs = [
   CustomTab(
       title: "Search by name",
-      body: (AppState state, addFactory, removeFactory) => DairyNameSearchPage(
-            allFactories: state.allFactories,
-            savedFactories: state.savedFactories,
+      body: (addFactory, removeFactory) => DairyNameSearchPage(
             addFactory: addFactory,
             removeFactory: removeFactory,
           )),
   CustomTab(
       title: "Search by number",
-      body: (AppState state, addFactory, removeFactory) =>
-          DairyApprovalNumbersPage(
-            allFactories: state.allFactories,
-            savedFactories: state.savedFactories,
+      body: (addFactory, removeFactory) => DairyApprovalNumbersPage(
             addFactory: addFactory,
             removeFactory: removeFactory,
           )),
   CustomTab(
       title: "Saved",
-      body: (AppState state, addFactory, removeFactory) => SavedDairyPage(
-            savedFactories: state.savedFactories.toList()..sort(),
-          ))
+      body: (addFactory, removeFactory) => const SavedDairyPage())
 ];
 
 class MyApp extends StatelessWidget {
@@ -61,10 +53,10 @@ class MyApp extends StatelessWidget {
                     TabBar(tabs: tabs.map((e) => Tab(text: e.title)).toList())),
             body: AppWrapper(
                 initialState: initialAppState,
-                builder: (context, state, addFactory, removeFactory) {
+                builder: (context, addFactory, removeFactory) {
                   return TabBarView(
                       children: tabs
-                          .map((e) => e.body(state, addFactory, removeFactory))
+                          .map((e) => e.body(addFactory, removeFactory))
                           .toList());
                 }),
           )),

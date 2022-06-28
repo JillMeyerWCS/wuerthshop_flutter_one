@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wuerthshop_part_1/model/dairy_factory.dart';
+import 'package:wuerthshop_part_1/widgets/app_wrapper.dart';
 import '../widgets/dairy_factory_display.dart';
 
 class SavedDairyPage extends StatelessWidget {
-  final List<DairyFactory> savedFactories;
-  const SavedDairyPage({Key? key, required this.savedFactories})
-      : super(key: key);
+  const SavedDairyPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final savedFactories =
+        (InheritedAppState.of(context)?.state.savedFactories ?? {}).toList();
+    savedFactories.sort();
     if (savedFactories.isEmpty) {
       return Center(
           child: Text("You didn't save any factories yet",

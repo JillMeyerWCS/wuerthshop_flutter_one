@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wuerthshop_part_1/widgets/app_wrapper.dart';
 
 import '../model/dairy_factory.dart';
 import 'dairy_factory_display.dart';
@@ -6,8 +7,6 @@ import 'dairy_factory_display.dart';
 class DairySearchForm extends StatefulWidget {
   final Widget Function(TextEditingController) builder;
   final bool Function(DairyFactory, String) filter;
-  final List<DairyFactory> allFactories;
-  final Set<DairyFactory> savedFactories;
   final Function(DairyFactory) addFactory;
   final Function(DairyFactory) removeFactory;
 
@@ -15,8 +14,6 @@ class DairySearchForm extends StatefulWidget {
       {Key? key,
       required this.builder,
       required this.filter,
-      required this.allFactories,
-      required this.savedFactories,
       required this.addFactory,
       required this.removeFactory})
       : super(key: key);
@@ -37,6 +34,7 @@ class _DairySearchFormState extends State<DairySearchForm> {
 
   @override
   Widget build(BuildContext context) {
+    final appState = InheritedAppState.of(context)!.state;
     return Column(
       children: [
         Padding(
@@ -51,7 +49,7 @@ class _DairySearchFormState extends State<DairySearchForm> {
                   .map((factory) => DairyFactoryDisplay(
                         name: factory.name,
                         approvalNumber: factory.approvalNumber,
-                        trailing: widget.savedFactories.contains(factory)
+                        trailing: appState.savedFactories.contains(factory)
                             ? IconButton(
                                 onPressed: () => widget.removeFactory(factory),
                                 icon: const Icon(Icons.favorite))
@@ -67,7 +65,8 @@ class _DairySearchFormState extends State<DairySearchForm> {
 
   void _updateResults() {
     setState(() {
-      _searchResult = widget.allFactories
+      final appState = InheritedAppState.of(context)!.state;
+      _searchResult = appState.allFactories
           .where((e) => widget.filter(e, _inputController.text))
           .take(10)
           .toList()
