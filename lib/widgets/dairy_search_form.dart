@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 
 import '../model/dairy_factory.dart';
-import '../util/dairy_factory_service.dart';
 import 'dairy_factory_display.dart';
 
 class DairySearchForm extends StatefulWidget {
   final Widget Function(TextEditingController) builder;
   final bool Function(DairyFactory, String) filter;
-  
-  const DairySearchForm({Key? key, required this.builder, required this.filter})
+  final List<DairyFactory> allFactories;
+
+  const DairySearchForm(
+      {Key? key,
+      required this.builder,
+      required this.filter,
+      required this.allFactories})
       : super(key: key);
 
   @override
@@ -17,7 +21,7 @@ class DairySearchForm extends StatefulWidget {
 
 class _DairySearchFormState extends State<DairySearchForm> {
   final _inputController = TextEditingController();
-  List<DairyFactory> _searchResult = DairyFactoryService().all;
+  List<DairyFactory> _searchResult = [];
 
   @override
   void initState() {
@@ -50,8 +54,7 @@ class _DairySearchFormState extends State<DairySearchForm> {
 
   void _updateResults() {
     setState(() {
-      _searchResult = DairyFactoryService()
-          .all
+      _searchResult = widget.allFactories
           .where((e) => widget.filter(e, _inputController.text))
           .take(10)
           .toList()

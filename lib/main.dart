@@ -8,7 +8,7 @@ import 'util/persistence.dart';
 Future<void> main() async {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    await loadAppState();
-    runApp(const MyApp());
+    final initialAppState = await loadAppState();
+    runApp(MyApp(initialAppState: initialAppState));
   }, (exception, stackTrace) async {});
 }

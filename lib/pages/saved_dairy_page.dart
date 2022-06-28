@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../util/dairy_factory_service.dart';
+import 'package:wuerthshop_part_1/model/dairy_factory.dart';
 import '../widgets/dairy_factory_display.dart';
 
 class SavedDairyPage extends StatelessWidget {
-  const SavedDairyPage({Key? key}) : super(key: key);
+  final List<DairyFactory> savedFactories;
+  const SavedDairyPage({Key? key, required this.savedFactories})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final factories = DairyFactoryService().all;
     return ListView.builder(
-      itemCount: factories.length,
+      itemCount: savedFactories.length,
       itemBuilder: (context, index) => DairyFactoryDisplay(
-          name: factories[index].name,
-          approvalNumber: factories[index].approvalNumber,
+          name: savedFactories[index].name,
+          approvalNumber: savedFactories[index].approvalNumber,
           onTap: _launchWebSearch),
     );
   }
