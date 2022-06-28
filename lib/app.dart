@@ -8,27 +8,19 @@ import 'pages/dairy_name_search_page.dart';
 import 'pages/saved_dairy_page.dart';
 
 class CustomTab {
-  CustomTab({required this.title, required this.body});
+  CustomTab({required this.title, required this.builder});
   final String title;
-  final Widget Function(Function(DairyFactory), Function(DairyFactory)) body;
+  final Widget Function(BuildContext context) builder;
 }
 
 final tabs = [
   CustomTab(
       title: "Search by name",
-      body: (addFactory, removeFactory) => DairyNameSearchPage(
-            addFactory: addFactory,
-            removeFactory: removeFactory,
-          )),
+      builder: (context) => const DairyNameSearchPage()),
   CustomTab(
       title: "Search by number",
-      body: (addFactory, removeFactory) => DairyApprovalNumbersPage(
-            addFactory: addFactory,
-            removeFactory: removeFactory,
-          )),
-  CustomTab(
-      title: "Saved",
-      body: (addFactory, removeFactory) => const SavedDairyPage())
+      builder: (context) => const DairyApprovalNumbersPage()),
+  CustomTab(title: "Saved", builder: (context) => const SavedDairyPage())
 ];
 
 class MyApp extends StatelessWidget {
@@ -53,11 +45,9 @@ class MyApp extends StatelessWidget {
                     TabBar(tabs: tabs.map((e) => Tab(text: e.title)).toList())),
             body: AppWrapper(
                 initialState: initialAppState,
-                builder: (context, addFactory, removeFactory) {
+                builder: (context) {
                   return TabBarView(
-                      children: tabs
-                          .map((e) => e.body(addFactory, removeFactory))
-                          .toList());
+                      children: tabs.map((e) => e.builder(context)).toList());
                 }),
           )),
     );

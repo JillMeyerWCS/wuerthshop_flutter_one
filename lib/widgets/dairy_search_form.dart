@@ -7,15 +7,8 @@ import 'dairy_factory_display.dart';
 class DairySearchForm extends StatefulWidget {
   final Widget Function(TextEditingController) builder;
   final bool Function(DairyFactory, String) filter;
-  final Function(DairyFactory) addFactory;
-  final Function(DairyFactory) removeFactory;
 
-  const DairySearchForm(
-      {Key? key,
-      required this.builder,
-      required this.filter,
-      required this.addFactory,
-      required this.removeFactory})
+  const DairySearchForm({Key? key, required this.builder, required this.filter})
       : super(key: key);
 
   @override
@@ -34,7 +27,8 @@ class _DairySearchFormState extends State<DairySearchForm> {
 
   @override
   Widget build(BuildContext context) {
-    final appState = InheritedAppState.of(context)!.state;
+    final appState = InheritedAppState.of(context)!;
+    final savedFactories = appState.state.savedFactories;
     return Column(
       children: [
         Padding(
@@ -49,12 +43,13 @@ class _DairySearchFormState extends State<DairySearchForm> {
                   .map((factory) => DairyFactoryDisplay(
                         name: factory.name,
                         approvalNumber: factory.approvalNumber,
-                        trailing: appState.savedFactories.contains(factory)
+                        trailing: savedFactories.contains(factory)
                             ? IconButton(
-                                onPressed: () => widget.removeFactory(factory),
+                                onPressed: () =>
+                                    appState.removeFactory(factory),
                                 icon: const Icon(Icons.favorite))
                             : IconButton(
-                                onPressed: () => widget.addFactory(factory),
+                                onPressed: () => appState.addFactory(factory),
                                 icon: const Icon(Icons.favorite_outline)),
                       ))
                   .toList()),
