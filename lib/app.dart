@@ -13,9 +13,9 @@ class CustomTab {
 }
 
 final tabs = [
-  CustomTab(title: "Search by name", builder: DairyNameSearchPage()),
-  CustomTab(title: "Search by number", builder: DairyApprovalNumbersPage()),
-  CustomTab(title: "Saved", builder: SavedDairyPage())
+  CustomTab(title: "Search by name", builder: const DairyNameSearchPage()),
+  CustomTab(title: "Search by number", builder: const DairyApprovalNumbersPage()),
+  CustomTab(title: "Saved", builder: const SavedDairyPage())
 ];
 
 class MyApp extends StatelessWidget {

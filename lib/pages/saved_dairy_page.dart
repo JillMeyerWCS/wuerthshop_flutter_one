@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:wuerthshop_part_1/widgets/app_wrapper.dart';
+import '../model/app_state.dart';
+import '../model/dairy_factory.dart';
 import '../widgets/dairy_factory_display.dart';
 
 class SavedDairyPage extends StatelessWidget {
@@ -8,21 +10,22 @@ class SavedDairyPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final savedFactories =
-        (InheritedAppState.of(context)?.state.savedFactories ?? {}).toList();
-    savedFactories.sort();
-    if (savedFactories.isEmpty) {
-      return Center(
-          child: Text("You didn't save any factories yet",
-              style: Theme.of(context).textTheme.headline2));
-    }
-    return ListView.builder(
-      itemCount: savedFactories.length,
-      itemBuilder: (context, index) => DairyFactoryDisplay(
-          name: savedFactories[index].name,
-          approvalNumber: savedFactories[index].approvalNumber,
-          onTap: _launchWebSearch),
-    );
+    return StoreConnector<AppState, List<DairyFactory>>(
+        converter: (store) => store.state.savedFactories.toList(),
+        builder: (context, savedFactories) {
+          if (savedFactories.isEmpty) {
+            return Center(
+                child: Text("You didn't save any factories yet",
+                    style: Theme.of(context).textTheme.headline2));
+          }
+          return ListView.builder(
+            itemCount: savedFactories.length,
+            itemBuilder: (context, index) => DairyFactoryDisplay(
+                name: savedFactories[index].name,
+                approvalNumber: savedFactories[index].approvalNumber,
+                onTap: _launchWebSearch),
+          );
+        });
   }
 
   void _launchWebSearch(String name) {

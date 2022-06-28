@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wuerthshop_part_1/widgets/app_wrapper.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:wuerthshop_part_1/model/app_actions.dart';
 
+import '../model/app_state.dart';
 import '../model/dairy_factory.dart';
 import 'dairy_factory_display.dart';
 
@@ -24,13 +26,11 @@ class DairySearchForm extends StatefulWidget {
 
 class _DairySearchFormState extends State<DairySearchForm> {
   late final TextEditingController _inputController;
-  List<DairyFactory> _searchResult = [];
 
   @override
   void initState() {
     super.initState();
     _inputController = TextEditingController(text: widget.intitialText);
-    _inputController.addListener(_updateResults);
     _inputController.addListener(() {
       widget.saveSearch(_inputController.text);
     });
@@ -44,46 +44,37 @@ class _DairySearchFormState extends State<DairySearchForm> {
 
   @override
   Widget build(BuildContext context) {
-    final appState = InheritedAppState.of(context)!;
-    final savedFactories = appState.state.savedFactories;
-    _updateResults();
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: widget.builder(
-            _inputController,
+    return StoreBuilder<AppState>(builder: (context, store) {
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: widget.builder(
+              _inputController,
+            ),
           ),
-        ),
-        Expanded(
-          child: ListView(
-              children: _searchResult
-                  .map((factory) => DairyFactoryDisplay(
-                        name: factory.name,
-                        approvalNumber: factory.approvalNumber,
-                        trailing: savedFactories.contains(factory)
-                            ? IconButton(
-                                onPressed: () =>
-                                    appState.removeFactory(factory),
-                                icon: const Icon(Icons.favorite))
-                            : IconButton(
-                                onPressed: () => appState.addFactory(factory),
-                                icon: const Icon(Icons.favorite_outline)),
-                      ))
-                  .toList()),
-        ),
-      ],
-    );
-  }
-
-  void _updateResults() {
-    setState(() {
-      final appState = InheritedAppState.of(context)!.state;
-      _searchResult = appState.allFactories
-          .where((e) => widget.filter(e, _inputController.text))
-          .take(10)
-          .toList()
-        ..sort();
+          Expanded(
+            child: ListView(
+                children: store.state.allFactories
+                    .where((element) =>
+                        widget.filter(element, _inputController.text))
+                    .map((factory) => DairyFactoryDisplay(
+                          name: factory.name,
+                          approvalNumber: factory.approvalNumber,
+                          trailing: store.state.savedFactories.contains(factory)
+                              ? IconButton(
+                                  onPressed: () =>
+                                      store.dispatch(RemoveFromSaved(factory)),
+                                  icon: const Icon(Icons.favorite))
+                              : IconButton(
+                                  onPressed: () =>
+                                      store.dispatch(AddToSaved(factory)),
+                                  icon: const Icon(Icons.favorite_outline)),
+                        ))
+                    .toList()),
+          ),
+        ],
+      );
     });
   }
 }
