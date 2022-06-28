@@ -1,8 +1,14 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:wuerthshop_part_1/model/dairy_factory.dart';
 
-class AppState {
-  final List<DairyFactory> allFactories;
-  final Set<DairyFactory> savedFactories;
+part "app_state.freezed.dart";
 
-  AppState({required this.allFactories, required this.savedFactories});
+@freezed
+class AppState with _$AppState {
+  const factory AppState({
+    required List<DairyFactory> allFactories,
+    required Set<DairyFactory> savedFactories,
+    required String nameSearch,
+    required String idSearch,
+  }) = _AppState;
 }

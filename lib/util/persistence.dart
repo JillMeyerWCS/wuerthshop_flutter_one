@@ -18,13 +18,20 @@ Future<AppState> loadAppState() async {
   final savedIds = prefs.getStringList(keySavedFactories) ?? [];
   final savedFactories = allFactories
       .where((element) => savedIds.contains(element.approvalNumber));
+
+  final nameSearch = prefs.getString(keyNameSearch) ?? '';
+  final idSearch = prefs.getString(keyIdSearch) ?? '';
   return AppState(
       allFactories: allFactories.toList(),
-      savedFactories: savedFactories.toSet());
+      savedFactories: savedFactories.toSet(),
+      nameSearch: nameSearch,
+      idSearch: idSearch);
 }
 
 Future<void> saveAppState(AppState state) async {
   final prefs = await SharedPreferences.getInstance();
   prefs.setStringList(keySavedFactories,
       state.savedFactories.map((e) => e.approvalNumber).toList());
+  prefs.setString(keyNameSearch, state.nameSearch);
+  prefs.setString(keyIdSearch, state.idSearch);
 }

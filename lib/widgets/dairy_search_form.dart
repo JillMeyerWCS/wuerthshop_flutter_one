@@ -7,8 +7,15 @@ import 'dairy_factory_display.dart';
 class DairySearchForm extends StatefulWidget {
   final Widget Function(TextEditingController) builder;
   final bool Function(DairyFactory, String) filter;
+  final Function(String) saveSearch;
+  final String intitialText;
 
-  const DairySearchForm({Key? key, required this.builder, required this.filter})
+  const DairySearchForm(
+      {Key? key,
+      required this.builder,
+      required this.filter,
+      required this.saveSearch,
+      this.intitialText = ''})
       : super(key: key);
 
   @override
@@ -16,19 +23,30 @@ class DairySearchForm extends StatefulWidget {
 }
 
 class _DairySearchFormState extends State<DairySearchForm> {
-  final _inputController = TextEditingController();
+  late final TextEditingController _inputController;
   List<DairyFactory> _searchResult = [];
 
   @override
   void initState() {
     super.initState();
+    _inputController = TextEditingController(text: widget.intitialText);
     _inputController.addListener(_updateResults);
+    _inputController.addListener(() {
+      widget.saveSearch(_inputController.text);
+    });
+  }
+
+  @override
+  void dispose() {
+    _inputController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final appState = InheritedAppState.of(context)!;
     final savedFactories = appState.state.savedFactories;
+    _updateResults();
     return Column(
       children: [
         Padding(

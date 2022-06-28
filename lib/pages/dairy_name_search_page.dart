@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:wuerthshop_part_1/model/dairy_factory.dart';
+import '../widgets/app_wrapper.dart';
 import '../widgets/dairy_search_form.dart';
 
 class DairyNameSearchPage extends StatelessWidget {
-  const DairyNameSearchPage({Key? key}) : super(key: key);
+  DairyNameSearchPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final appState = InheritedAppState.of(context)!;
     return DairySearchForm(
+      intitialText: appState.state.nameSearch,
+      saveSearch:  appState.saveNameSearch,
       builder: (controller) => TextField(
         controller: controller,
         decoration: const InputDecoration(hintText: "Type..."),

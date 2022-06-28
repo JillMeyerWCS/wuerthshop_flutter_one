@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:wuerthshop_part_1/model/dairy_factory.dart';
 import 'package:wuerthshop_part_1/widgets/app_wrapper.dart';
 import '../widgets/dairy_factory_display.dart';
 

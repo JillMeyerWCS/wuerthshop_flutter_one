@@ -16,7 +16,7 @@ class AppWrapper extends StatefulWidget {
 }
 
 class _AppWrapperState extends State<AppWrapper> {
-  late final AppState _state;
+  late AppState _state;
 
   @override
   void initState() {
@@ -26,13 +26,29 @@ class _AppWrapperState extends State<AppWrapper> {
 
   addFactory(DairyFactory factory) {
     setState(() {
-      _state.savedFactories.add(factory);
+      final savedFactories = Set<DairyFactory>.from(_state.savedFactories);
+      savedFactories.add(factory);
+      _state = _state.copyWith(savedFactories: savedFactories);
     });
   }
 
   removeFactory(DairyFactory factory) {
     setState(() {
-      _state.savedFactories.remove(factory);
+      final savedFactories = Set<DairyFactory>.from(_state.savedFactories);
+      savedFactories.remove(factory);
+      _state = _state.copyWith(savedFactories: savedFactories);
+    });
+  }
+
+  saveNameSearch(String text) {
+    setState(() {
+      _state = _state.copyWith(nameSearch: text);
+    });
+  }
+
+  saveIdSearch(String text) {
+    setState(() {
+      _state = _state.copyWith(idSearch: text);
     });
   }
 
@@ -43,6 +59,8 @@ class _AppWrapperState extends State<AppWrapper> {
         state: _state,
         addFactory: addFactory,
         removeFactory: removeFactory,
+        saveNameSearch: saveNameSearch,
+        saveIdSearch: saveIdSearch,
         child: widget.builder(context));
   }
 }
@@ -51,17 +69,21 @@ class InheritedAppState extends InheritedWidget {
   final AppState state;
   final Function(DairyFactory) addFactory;
   final Function(DairyFactory) removeFactory;
+  final Function(String) saveNameSearch;
+  final Function(String) saveIdSearch;
   const InheritedAppState(
       {Key? key,
       required Widget child,
       required this.state,
+      required this.saveNameSearch,
+      required this.saveIdSearch,
       required this.removeFactory,
       required this.addFactory})
       : super(key: key, child: child);
 
   @override
   bool updateShouldNotify(covariant InheritedAppState oldWidget) {
-    return true;
+    return oldWidget.state != state;
   }
 
   static InheritedAppState? of(BuildContext context) =>
