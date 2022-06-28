@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wuerthshop_part_1/model/dairy_factory.dart';
 
 import '../model/app_state.dart';
+import '../util/persistence.dart';
 
 class AppWrapper extends StatefulWidget {
   final AppState initialState;
@@ -37,6 +38,7 @@ class _AppWrapperState extends State<AppWrapper> {
 
   @override
   Widget build(BuildContext context) {
+    saveAppState(_state);
     return InheritedAppState(
         state: _state,
         addFactory: addFactory,
